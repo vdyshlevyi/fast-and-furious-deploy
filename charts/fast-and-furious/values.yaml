@@ -6,9 +6,9 @@ image:
   pullPolicy: Always
 
 service:
-  type: ClusterIP
-  port: 80
-  targetPort: 9000
+  type: ClusterIP   # or NodePort if you want to expose directly (Ingress works fine with ClusterIP)
+  port: 80          # what the world / ingress sees
+  targetPort: 9000  # what FastAPI container listens on 
 
 env:
   - name: HOST
