@@ -5,7 +5,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-  - host: "api.138.68.80.227.nip.io"
+  - host: "api.165.232.94.220.nip.io"  # TODO(Valerii Dyshlevyi): use Droplet IP    
     http:
       paths:
       - path: /
