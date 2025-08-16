@@ -1,0 +1,17 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/vdyshlevyi/fast-and-furious/fast-and-furious
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 9000
+
+env:
+  - name: HOST
+    value: "0.0.0.0"
+  - name: SECRET_KEY
+    value: "1234567890"
