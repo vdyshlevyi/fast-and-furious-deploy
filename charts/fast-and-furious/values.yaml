@@ -15,3 +15,7 @@ env:
     value: "0.0.0.0"
   - name: SECRET_KEY
     value: "1234567890"
+
+ingress:
+  enabled: true
+  host: api.142.93.162.241.nip.io   # default, can override per env

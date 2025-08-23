@@ -88,3 +88,5 @@ kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.pas
 
 
 # how to get access
+
+# Loki, Grafana, Promtail
