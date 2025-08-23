@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: traefik
   rules:
-    - host: argocd.example.com   # or nip.io for now
+    - host: ${ARGOCD_HOST}
       http:
         paths:
           - path: /
@@ -15,4 +15,4 @@ spec:
               service:
                 name: argocd-server
                 port:
-                  number: 80   # or 443 if you want TLS passthrough
+                  number: ${ARGOCD_PORT}   # or 443 if you want TLS passthrough
