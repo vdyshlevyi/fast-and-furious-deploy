@@ -1,7 +1,8 @@
+
 name: Deploy ArgoCD Ingress (via SSH)
 
 on:
-  workflow_dispatch:   # manual trigger button
+  workflow_dispatch: # manual trigger button
 
 jobs:
   deploy-ingress:
@@ -17,7 +18,7 @@ jobs:
           host: ${{ vars.DO_HOST }}
           username: ${{ vars.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
-          source: "argocd/argocd-server-ingress.yaml"
+          source: "manifests/argocd/argocd-server-ingress.yaml"
           target: "/home/${{ vars.DO_USER }}/"
 
       - name: Apply manifest
