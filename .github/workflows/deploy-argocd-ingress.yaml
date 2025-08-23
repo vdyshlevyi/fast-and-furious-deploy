@@ -1,0 +1,24 @@
+name: Deploy ArgoCD Ingress (via SSH)
+
+on:
+  workflow_dispatch:   # manual trigger button
+
+jobs:
+  deploy-ingress:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: SSH into droplet and apply ingress
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ vars.DO_HOST }}
+          username: ${{ vars.DO_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          script: |
+            cd /root/backend/fast-and-furious-deploy
+            export ARGOCD_HOST=${{ vars.ARGOCD_HOST }}
+            envsubst < argocd/argocd-server-ingress.yaml > rendered.yaml
+            kubectl apply -f rendered.yaml
