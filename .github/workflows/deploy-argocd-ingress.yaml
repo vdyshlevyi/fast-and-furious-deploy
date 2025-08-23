@@ -19,7 +19,7 @@ jobs:
           username: ${{ vars.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
           source: "manifests/argocd/argocd-server-ingress.yaml"
-          target: "/home/${{ vars.DO_USER }}/"
+          target: "/home/${{ vars.DO_USER }}/argocd-server-ingress.yaml"
 
       - name: Apply manifest
         uses: appleboy/ssh-action@v1.1.0
