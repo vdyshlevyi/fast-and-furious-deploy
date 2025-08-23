@@ -31,5 +31,6 @@ jobs:
           script: |
             cd /home/${{ vars.DO_USER }}
             export ARGOCD_HOST=${{ vars.ARGOCD_HOST }}
+            export KUBECONFIG=/home/${{ vars.DO_USER }}/.kube/config
             envsubst < argocd-server-ingress.yaml > argocd-server-ingress-extended.yaml
             kubectl apply -f argocd-server-ingress-extended.yaml
