@@ -11,14 +11,23 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: SSH into droplet and apply ingress
+      - name: Upload manifest
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ vars.DO_HOST }}
+          username: ${{ vars.DO_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          source: "argocd/argocd-server-ingress.yaml"
+          target: "/home/${{ vars.DO_USER }}/"
+
+      - name: Apply manifest
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ vars.DO_HOST }}
           username: ${{ vars.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
-            cd /root/backend/fast-and-furious-deploy
+            cd /home/${{ vars.DO_USER }}
             export ARGOCD_HOST=${{ vars.ARGOCD_HOST }}
-            envsubst < argocd/argocd-server-ingress.yaml > rendered.yaml
-            kubectl apply -f rendered.yaml
+            envsubst < argocd-server-ingress.yaml > argocd-server-ingress-extended.yaml
+            kubectl apply -f argocd-server-ingress-extended.yaml
