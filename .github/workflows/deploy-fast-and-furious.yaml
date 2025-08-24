@@ -1,4 +1,4 @@
-name: Deploy Fast-and-Furious App
+name: Deploy Fast-and-Furious App (via SSH)
 
 on:
   workflow_dispatch:   # manual trigger
@@ -29,7 +29,8 @@ jobs:
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
             cd /home/${{ vars.DO_USER }}
-            export APP_HOST=${{ vars.APP_HOST }}
-            export APP_PORT=${{ vars.APP_PORT }}
-            envsubst '${APP_HOST} ${APP_PORT}' < fast-and-furious-app.yaml > fast-and-furious-app-extended.yaml
+            export ARGOCD_HOST=${{ vars.ARGOCD_HOST }}
+            export ARGOCD_PORT=${{ vars.ARGOCD_PORT }}
+            export KUBECONFIG=/home/${{ vars.DO_USER }}/.kube/config
+            envsubst < fast-and-furious-app.yaml > fast-and-furious-app-extended.yaml
             kubectl apply -f fast-and-furious-app-extended.yaml
