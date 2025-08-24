@@ -18,7 +18,7 @@ spec:
           port: ${APP_PORT}
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: fast-and-furios-ns
   syncPolicy:
     automated:
       prune: true
