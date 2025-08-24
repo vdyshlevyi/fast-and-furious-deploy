@@ -15,4 +15,4 @@ spec:
               service:
                 name: argocd-server
                 port:
-                  number: ${ARGOCD_PORT}   # or 443 if you want TLS passthrough
+                  number: ${ARGOCD_PORT}   # 80 or 443 if you want TLS passthrough

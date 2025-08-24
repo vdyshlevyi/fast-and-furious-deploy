@@ -10,8 +10,12 @@ spec:
     targetRevision: HEAD
     path: charts/fast-and-furious
     helm:
-      valueFiles:
-        - values.yaml
+      values: |
+        ingress:
+          enabled: true
+          host: ${APP_HOST}
+        service:
+          port: ${APP_PORT}
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

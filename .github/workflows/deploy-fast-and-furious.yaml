@@ -1,0 +1,35 @@
+name: Deploy Fast-and-Furious App
+
+on:
+  workflow_dispatch:   # manual trigger
+
+jobs:
+  deploy-app:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Upload Application manifest
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ vars.DO_HOST }}
+          username: ${{ vars.DO_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          source: "argocd/fast-and-furious-app.yaml"
+          target: "/home/${{ vars.DO_USER }}/fast-and-furious-app.yaml"
+          strip_components: 2
+
+      - name: Apply Application in ArgoCD
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ vars.DO_HOST }}
+          username: ${{ vars.DO_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          script: |
+            cd /home/${{ vars.DO_USER }}
+            export APP_HOST=${{ vars.APP_HOST }}
+            export APP_PORT=${{ vars.APP_PORT }}
+            envsubst '${APP_HOST} ${APP_PORT}' < fast-and-furious-app.yaml > fast-and-furious-app-extended.yaml
+            kubectl apply -f fast-and-furious-app-extended.yaml
