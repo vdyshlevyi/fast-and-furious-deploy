@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki
+  namespace: argocd
+spec:
+  project: default
+  destination:
+    namespace: logging
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: loki-stack
+    targetRevision: 2.9.11   # check latest version
+    helm:
+      values: |
+        grafana:
+          enabled: true       # deploy Grafana too
+          service:
+            type: ClusterIP
+        promtail:
+          enabled: true       # collect logs from all pods
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,52 @@
+name: Deploy Logging (Loki + Grafana)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-logging:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Upload Loki Application
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ vars.DO_HOST }}
+          username: ${{ vars.DO_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          source: "argocd/loki-app.yaml"
+          target: "/home/${{ vars.DO_USER }}/loki-app.yaml"
+
+      - name: Upload Grafana Ingress
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ vars.DO_HOST }}
+          username: ${{ vars.DO_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          source: "manifests/logging/grafana-ingress.yaml"
+          target: "/home/${{ vars.DO_USER }}/"
+          strip_components: 2
+
+      - name: Apply Logging stack
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ vars.DO_HOST }}
+          username: ${{ vars.DO_USER }}
+          key: ${{ secrets.DO_SSH_KEY }}
+          script: |
+            cd /home/${{ vars.DO_USER }}
+            export GRAFANA_HOST=${{ vars.GRAFANA_HOST }}
+            export KUBECONFIG=/home/${{ vars.DO_USER }}/.kube/config
+            
+            # make sure namespace exists
+            kubectl create namespace logging --dry-run=client -o yaml | kubectl apply -f -
+
+            # apply ArgoCD Loki Application
+            kubectl apply -f loki-app.yaml
+
+            # render and apply Grafana Ingress
+            envsubst '${GRAFANA_HOST}' < grafana-ingress.yaml > grafana-ingress-extended.yaml
+            kubectl apply -f grafana-ingress-extended.yaml
