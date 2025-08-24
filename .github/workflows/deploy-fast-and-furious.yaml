@@ -19,7 +19,7 @@ jobs:
           key: ${{ secrets.DO_SSH_KEY }}
           source: "argocd/fast-and-furious-app.yaml"
           target: "/home/${{ vars.DO_USER }}/"
-          strip_components: 2
+          strip_components: 1
 
       - name: Apply Application in ArgoCD
         uses: appleboy/ssh-action@v1.1.0
