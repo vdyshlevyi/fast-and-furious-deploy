@@ -19,6 +19,7 @@ jobs:
           key: ${{ secrets.DO_SSH_KEY }}
           source: "argocd/loki-app.yaml"
           target: "/home/${{ vars.DO_USER }}/loki-app.yaml"
+          strip_components: 1
 
       - name: Upload Grafana Ingress
         uses: appleboy/scp-action@v0.1.7
