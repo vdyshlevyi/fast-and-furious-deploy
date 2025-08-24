@@ -18,7 +18,7 @@ jobs:
           username: ${{ vars.DO_USER }}
           key: ${{ secrets.DO_SSH_KEY }}
           source: "argocd/fast-and-furious-app.yaml"
-          target: "/home/${{ vars.DO_USER }}/fast-and-furious-app.yaml"
+          target: "/home/${{ vars.DO_USER }}/"
           strip_components: 2
 
       - name: Apply Application in ArgoCD
